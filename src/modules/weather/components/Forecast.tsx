@@ -5,13 +5,16 @@ import {useFetchApi} from '../../../hooks/useFetchApi';
 import {FlatList, Text} from 'react-native';
 import {DayCard} from './DayCard';
 import {API_KEY, SERVER_PREFIX} from '../../../constants';
+import {useDegrees} from '../../../hooks/useDegrees';
 
 const Container = styled(FlexedRow)`
   margin-top: 20%;
 `;
 
-export const Forecast = ({selectedCity, cityKey}) => {
-  const endpoint = `${SERVER_PREFIX}/forecasts/v1/daily/5day/${cityKey}?apikey=${API_KEY}&metric=true`;
+export const Forecast = ({city}) => {
+  const {degreesType} = useDegrees();
+
+  const endpoint = `${SERVER_PREFIX}/forecasts/v1/daily/5day/${city.Key}?apikey=${API_KEY}&metric=${degreesType}`;
 
   const {
     data: forecastData,
@@ -23,7 +26,7 @@ export const Forecast = ({selectedCity, cityKey}) => {
 
   useEffect(() => {
     refetchForecast();
-  }, [selectedCity]);
+  }, [city, degreesType]);
 
   if (isLoadingForecast) {
     return <Text>Loading...</Text>;

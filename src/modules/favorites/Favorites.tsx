@@ -7,7 +7,7 @@ import {useQueries} from 'react-query';
 import {fetchApi} from '../../api';
 import {API_KEY, SERVER_PREFIX} from '../../constants';
 import {FlexedCol} from '../../ui/Layouts';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import {FavoriteCard} from './components/FavoriteCard';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {selectedCityState} from '../../atoms/SelectedCityState';
@@ -15,6 +15,8 @@ import {selectedCityState} from '../../atoms/SelectedCityState';
 const Container = styled(FlexedCol)`
   padding: 10px;
   overflow: scroll;
+  background: ${({theme}) => theme.background};
+  height: 100%;
 `;
 
 interface Props {

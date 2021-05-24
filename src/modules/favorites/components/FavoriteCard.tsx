@@ -1,6 +1,7 @@
 import {Card, MyText} from '../../../ui/Layouts';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import React from 'react';
+import {useDegrees} from '../../../hooks/useDegrees';
 
 const Content = styled(Card)`
   display: flex;
@@ -17,6 +18,9 @@ const Degrees = styled(MyText)`
 const Left = styled.View``;
 const Right = styled.View``;
 export const FavoriteCard = ({item, name}) => {
+  const {degreesType} = useDegrees();
+  const degType = degreesType ? 'Metric' : 'Imperial';
+
   return (
     <Content>
       <Left>
@@ -25,8 +29,8 @@ export const FavoriteCard = ({item, name}) => {
       </Left>
       <Right>
         <Degrees>
-          {item.data[0].Temperature.Metric.Value}{' '}
-          {item.data[0].Temperature.Metric.Unit}
+          {item.data[0].Temperature[degType].Value}{' '}
+          {item.data[0].Temperature[degType].Unit}
         </Degrees>
       </Right>
     </Content>

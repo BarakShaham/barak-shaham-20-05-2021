@@ -5,10 +5,9 @@ import {Colors} from '../../../ui/Colors';
 import {useFetchApi} from '../../../hooks/useFetchApi';
 import {Text} from 'react-native';
 import {API_KEY, SERVER_PREFIX} from '../../../constants';
+import {useDegrees} from '../../../hooks/useDegrees';
 
-const Container = styled(Card)`
-  background-color: ${Colors.grey};
-`;
+const Container = styled(Card)``;
 const CityName = styled(MyText)`
   font-size: 30px;
 `;
@@ -17,8 +16,10 @@ const Degrees = styled(MyText)`
   font-size: 44px;
 `;
 
-export const CurrentCondition = ({selectedCityData, cityKey}) => {
-  const endpoint = `${SERVER_PREFIX}/currentconditions/v1/${cityKey}?apikey=${API_KEY}`;
+export const CurrentCondition = ({city}) => {
+  const {degreesType} = useDegrees();
+  //console.log(selectedCityData, cityKey);
+  const endpoint = `${SERVER_PREFIX}/currentconditions/v1/${city.Key}?apikey=${API_KEY}`;
 
   const {
     data: conditionData,
@@ -31,7 +32,7 @@ export const CurrentCondition = ({selectedCityData, cityKey}) => {
   });
   useEffect(() => {
     refetchCondition();
-  }, [selectedCityData]);
+  }, [city]);
 
   if (isLoadingCondition) {
     return <Text>Loading...</Text>;
@@ -39,17 +40,17 @@ export const CurrentCondition = ({selectedCityData, cityKey}) => {
   if (isErrorCondition) {
     return <Text>Error</Text>;
   }
+
+  const degType = degreesType ? 'Metric' : 'Imperial';
   return (
     <Container>
-      {selectedCityData && (
-        <CityName>{selectedCityData.LocalizedName}</CityName>
-      )}
+      {city && <CityName>{city.LocalizedName}</CityName>}
       {conditionData && (
         <>
           <Phrase>{conditionData[0].WeatherText}</Phrase>
           <Degrees>
-            {conditionData[0].Temperature.Metric.Value}{' '}
-            {conditionData[0].Temperature.Metric.Unit}
+            {conditionData[0].Temperature[degType].Value}{' '}
+            {conditionData[0].Temperature[degType].Unit}
           </Degrees>
         </>
       )}

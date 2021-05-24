@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import {Colors} from './Colors';
 
 export const FlexedRow = styled.View`
@@ -11,17 +11,18 @@ export const FlexedCol = styled.View`
 `;
 export const Header = styled.Text``;
 
-export const MyText = styled.Text`
+export const MyText = styled.Text<{theme}>`
   font-size: 18px;
+  color: ${({theme}) => theme.text};
 `;
 
-export const Card = styled.View`
+export const Card = styled.View<{theme}>`
   display: flex;
   padding: 20px;
   text-align: center;
   align-items: center;
   justify-content: center;
-  background-color: ${Colors.darkGrey};
+  background-color: ${({theme}) => theme.card};
   margin: 5px;
   border-radius: 10px;
 `;

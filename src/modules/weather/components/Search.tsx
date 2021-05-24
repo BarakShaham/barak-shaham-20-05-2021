@@ -1,21 +1,26 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Text, TextInput, TouchableOpacity, ScrollView} from 'react-native';
 import {useRecoilState} from 'recoil';
 import {selectedCityState} from '../../../atoms/SelectedCityState';
 import {API_KEY, SERVER_PREFIX} from '../../../constants';
 import {useDebounce} from '../../../hooks/useDebounce';
 import {useFetchApi} from '../../../hooks/useFetchApi';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import {Colors} from '../../../ui/Colors';
+import {useTheme} from '../../../hooks/useTheme';
+import {MyText} from '../../../ui/Layouts';
 
-const List = styled.ScrollView`
-  z-index: 1;
-  background-color: ${Colors.white};
-  border-style: solid;
-  position: relative;
+const List = styled.View`
+  background-color: ${Colors.darkGrey};
+  padding: 10px;
+  border-radius: 5px;
+`;
+const City = styled.TouchableOpacity`
+  margin: 5px 0px;
 `;
 
 export const Search = () => {
+  const [theme] = useTheme();
   const [selectedCity, setSelectedCity] = useRecoilState(selectedCityState);
 
   const [searchVal, setSearchval] = useState('');
@@ -38,12 +43,14 @@ export const Search = () => {
     refetch: refetchCity,
   } = useFetchApi('selectedCity', endpointSelectCity, {enabled: false});
 
-  const debouncedSearchVal = useDebounce(searchVal, 500);
+  const debouncedSearchVal = useDebounce(searchVal, 1000);
   useEffect(() => {
     if (debouncedSearchVal) {
       refetchCity();
     }
   }, [debouncedSearchVal]);
+
+  console.log(autoCompleteData);
 
   return (
     <>
@@ -51,6 +58,9 @@ export const Search = () => {
         placeholder="city name..."
         onChangeText={text => search(text)}
         value={searchVal}
+        placeholderTextColor={
+          theme === 'light' ? Colors.black : Colors.darkGrey
+        }
       />
       {isLoadingCity ? (
         <Text>Loading...</Text>
@@ -59,11 +69,11 @@ export const Search = () => {
       ) : searchVal != '' && autoCompleteData ? (
         <List>
           {autoCompleteData.map(city => (
-            <TouchableOpacity onPress={() => selectCity(city)} key={city.Key}>
-              <Text>
+            <City onPress={() => selectCity(city)} key={city.Key}>
+              <MyText>
                 {city.LocalizedName}, {city.Country.LocalizedName}
-              </Text>
-            </TouchableOpacity>
+              </MyText>
+            </City>
           ))}
         </List>
       ) : null}

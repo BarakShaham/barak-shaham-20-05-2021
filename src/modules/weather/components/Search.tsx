@@ -50,8 +50,6 @@ export const Search = () => {
     }
   }, [debouncedSearchVal]);
 
-  console.log(autoCompleteData);
-
   return (
     <>
       <TextInput
